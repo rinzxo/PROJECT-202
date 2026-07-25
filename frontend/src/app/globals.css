@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f5f4ef;
+  --foreground: #1a1a1a;
+  --primary: #004bbf;
+  --primary-foreground: #ffffff;
+  --mnbaq-teal: #006f8a;
+  --mnbaq-green: #007641;
+  --mnbaq-yellow: #ffea00;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-mnbaq-teal: var(--mnbaq-teal);
+  --color-mnbaq-green: var(--mnbaq-green);
+  --color-mnbaq-yellow: var(--mnbaq-yellow);
+  --font-sans: var(--font-fustat), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Dark mode disabled to force white/blue theme */
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}

@@ -54,12 +54,15 @@ export function SlantedHeader({ title, titleClassName, subtitle, description, im
             </>
           )}
 
-          {/* IMAGE BACKGROUND (Fallback if no video) */}
+          {/* IMAGE BACKGROUND (Highest Priority for LCP) */}
           {!videoSrc && imageSrc && (
             <>
-              <div 
-                className="absolute inset-0 bg-cover bg-center" 
-                style={{ backgroundImage: `url(${imageSrc})` }} 
+              <img 
+                src={imageSrc} 
+                alt="Latar Belakang SMAN 2 Babelan" 
+                fetchPriority="high" 
+                loading="eager"
+                className="absolute inset-0 w-full h-full object-cover object-center" 
               />
               <div className="absolute inset-0 bg-black/40" />
             </>

@@ -5,3 +5,14 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+# Optimasi Caching Aset Statis untuk Kecepatan Maksimal (Lighthouse 100)
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

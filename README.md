@@ -114,5 +114,5 @@ SMAN 2 BABELAN/
 
 ### 🛡️ Lisensi & Hak Cipta
 
-© **{new Date().getFullYear()} SMAN 2 BABELAN**. All Rights Reserved.  
+© **2026 RINZ GROUP INOVASI**. All Rights Reserved.  
 Dirancang dan dikembangkan dengan standar keunggulan desain visual modern untuk kemajuan pendidikan Indonesia.

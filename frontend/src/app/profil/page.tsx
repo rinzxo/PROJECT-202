@@ -1,138 +1,250 @@
+"use client";
+
 import Image from "next/image";
-import { FadeUp } from "@/components/ui/fade-up";
-import { ArrowRight } from "lucide-react";
-import { SlantedHeader } from "@/components/layout/slanted-header";
+import Link from "next/link";
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
+
+// Taste Skill Dials
+// DESIGN_VARIANCE: 7 (Editorial Magazine Layout)
+// MOTION_INTENSITY: 5 (Smooth scroll reveals)
+// VISUAL_DENSITY: 3 (Airy, edge-to-edge images on mobile)
 
 export default function ProfilPage() {
-  return (
-    <div className="flex flex-col min-h-screen font-sans">
-      <SlantedHeader 
-        title="PROFIL"
-        subtitle="SEKOLAH KITA"
-        description="Mengenal lebih dekat visi, misi, jajaran pendidik, hingga fasilitas yang mendukung terciptanya lingkungan belajar unggul di SMAN 2 Babelan."
-      >
-        <div className="bg-background pt-16 lg:pt-32">
+  const reduce = useReducedMotion();
+  const [settings, setSettings] = useState<any>(null);
+  const [bphs, setBphs] = useState<any[]>([]);
 
-      {/* VISI & MISI (BLUE BLOCK) */}
+  useEffect(() => {
+    const fetchData = async () => {
+      const [settingsRes, bphsRes] = await Promise.all([
+        supabase.from('site_settings').select('*').limit(1).single(),
+        supabase.from('bph').select('*').order('order_index', { ascending: true })
+      ]);
+      
+      if (settingsRes.data) setSettings(settingsRes.data);
+      if (bphsRes.data) setBphs(bphsRes.data);
+    };
+    fetchData();
+  }, []);
+
+  const pembinas = bphs.filter(b => b.role.toLowerCase().includes('pembina'));
+  const intis = bphs.filter(b => b.role.toLowerCase().includes('ketua'));
+  const sekbens = bphs.filter(b => b.role.toLowerCase().includes('sekretaris') || b.role.toLowerCase().includes('bendahara'));
+
+  const misiPoints = settings?.misi ? settings.misi.split('\n').filter((m: string) => m.trim().length > 0) : [];
+
+  return (
+    <div className="flex flex-col min-h-dvh font-sans selection:bg-primary selection:text-white bg-background pt-24 lg:pt-32 pb-32">
+      
+      {/* NATIVE HERO (Replacing SlantedHeader) */}
+      <section className="container mx-auto px-6 lg:px-12 mb-24 lg:mb-40">
+        <motion.div
+          initial={reduce ? false : { opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="max-w-5xl"
+        >
+          <h1 className="text-6xl md:text-8xl lg:text-[10rem] font-black tracking-tighter leading-[0.85] text-primary mb-8 -ml-1 lg:-ml-2">
+            PROFIL
+          </h1>
+          <p className="text-xl md:text-2xl font-medium tracking-wide opacity-80 max-w-2xl leading-relaxed text-foreground">
+            Mengenal lebih dekat visi, misi, jajaran pengurus, hingga program kerja unggulan OSIS SMAN 2 Babelan.
+          </p>
+        </motion.div>
+      </section>
+
+      {/* VISI & MISI */}
       <section id="visi-misi" className="bg-primary text-white py-24 lg:py-40">
         <div className="container mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-12 gap-16">
           <div className="lg:col-span-5">
-            <FadeUp>
-              <h2 className="text-4xl md:text-6xl font-black tracking-tighter leading-none mb-8">
+            <motion.div
+              initial={reduce ? false : { opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.6 }}
+            >
+              <h2 className="text-5xl md:text-7xl font-bold tracking-tighter leading-none mb-8">
                 VISI &<br />MISI
               </h2>
-            </FadeUp>
+            </motion.div>
           </div>
           <div className="lg:col-span-7 flex flex-col gap-16">
-            <FadeUp delay={0.1}>
-              <h3 className="text-[11px] font-black tracking-widest mb-4 border-b border-white/20 pb-4">VISI KAMI</h3>
-              <p className="text-2xl lg:text-3xl font-bold tracking-tight leading-tight uppercase">
-                "SEKOLAH UNGGUL BERAKHLAKKUL KHARIMAH, BERPRESTASI, KREATIF DAN BERKEBINEKAAN GLOBAL"
+            <motion.div
+              initial={reduce ? false : { opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              <h3 className="text-[10px] font-bold tracking-[0.2em] uppercase mb-6 text-white/50">Visi Kami</h3>
+              <p className="text-3xl lg:text-5xl font-bold tracking-tighter leading-[1.1]">
+                {settings?.visi || '"Menjadikan OSIS sebagai wadah aspirasi, kreativitas, dan prestasi siswa yang berakhlak mulia dan berwawasan global"'}
               </p>
-            </FadeUp>
-            <FadeUp delay={0.2}>
-              <h3 className="text-[11px] font-black tracking-widest mb-4 border-b border-white/20 pb-4">MISI KAMI</h3>
-              <ul className="flex flex-col gap-4 text-[13px] lg:text-sm font-medium normal-case tracking-normal opacity-90">
-                <li className="flex gap-4"><span className="font-black shrink-0">01.</span> Meningkatkan pembiasaan praktik baik di lingkungan sekolah.</li>
-                <li className="flex gap-4"><span className="font-black shrink-0">02.</span> Meningkatkan budaya lingkungan sekolah dengan menerapkan 7K.</li>
-                <li className="flex gap-4"><span className="font-black shrink-0">03.</span> Menerapkan budaya tepat waktu hadir di sekolah.</li>
-                <li className="flex gap-4"><span className="font-black shrink-0">04.</span> Meningkatkan potensi akademik dan non akademik melalui pembelajaran yang kreatif dan inovatif.</li>
-                <li className="flex gap-4"><span className="font-black shrink-0">05.</span> Meningkatkan mutu pembelajaran yang berpusat pada siswa.</li>
-                <li className="flex gap-4"><span className="font-black shrink-0">06.</span> Meningkatkan kompetensi pendidik dan tenaga kependidikan melalui program reward dan punishment.</li>
-                <li className="flex gap-4"><span className="font-black shrink-0">07.</span> Menerapkan budaya 5S (Senyum, Sapa, Salam, Sopan dan Santun) antar warga sekolah.</li>
-                <li className="flex gap-4"><span className="font-black shrink-0">08.</span> Menerapkan budaya literasi akademik dan non akademik.</li>
-                <li className="flex gap-4"><span className="font-black shrink-0">09.</span> Meningkatkan kedisiplinan dengan sistem poin.</li>
-              </ul>
-            </FadeUp>
-          </div>
-        </div>
-      </section>
-
-      {/* STRUKTUR ORGANISASI (WHITE BLOCK) */}
-      <section id="struktur" className="bg-background text-primary py-24 lg:py-40">
-        <div className="container mx-auto px-6 lg:px-12">
-          <FadeUp>
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 border-b-2 border-primary pb-8 gap-8">
-              <h2 className="text-4xl md:text-6xl font-black tracking-tighter leading-none">
-                STRUKTUR<br />ORGANISASI
-              </h2>
-              <p className="text-[10px] font-black tracking-widest max-w-xs text-right hidden md:block">
-                PIMPINAN DAN STAF SMAN 2 BABELAN
-              </p>
-            </div>
-          </FadeUp>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { role: "KEPALA SEKOLAH", name: "Dra. Sri Winanti, M.Pd." },
-              { role: "WAKASEK KURIKULUM", name: "Budi Santoso, S.Pd., M.Si." },
-              { role: "WAKASEK KESISWAAN", name: "Sarkowih, S.Pd." }
-            ].map((person, i) => (
-              <FadeUp key={i} delay={i * 0.1}>
-                <div className="aspect-3/4 bg-slate-200 relative mb-6 overflow-hidden group">
-                  <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=1887')] bg-cover bg-center grayscale mix-blend-multiply opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700" />
-                </div>
-                <p className="text-[10px] font-black tracking-widest mb-2 opacity-60">{person.role}</p>
-                <h3 className="text-xl font-bold tracking-tighter normal-case">{person.name}</h3>
-              </FadeUp>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* DAFTAR GURU & TU (BLUE BLOCK) */}
-      <section id="guru" className="bg-primary text-white py-24 lg:py-40">
-        <div className="container mx-auto px-6 lg:px-12 text-center">
-          <FadeUp>
-            <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.85] mb-12">
-              KEPEGAWAIAN
-            </h2>
-            <p className="max-w-2xl mx-auto text-[13px] font-medium normal-case tracking-normal opacity-90 mb-16">
-              SMAN 2 Babelan didukung oleh 54 Tenaga Pendidik (Guru) profesional yang linier di bidangnya dan 12 Staf Tata Usaha (TU) yang berdedikasi melayani administrasi pendidikan.
-            </p>
+            </motion.div>
             
-            <div className="flex flex-col sm:flex-row justify-center gap-6">
-              <button className="bg-white text-primary px-8 py-4 text-[11px] font-black tracking-widest hover:bg-slate-100 transition-colors">
-                LIHAT DAFTAR GURU
-              </button>
-              <button className="bg-transparent border-2 border-white text-white px-8 py-4 text-[11px] font-black tracking-widest hover:bg-white hover:text-primary transition-colors">
-                LIHAT DAFTAR TU
-              </button>
-            </div>
-          </FadeUp>
-        </div>
-      </section>
-
-      {/* SARANA PRASARANA (WHITE BLOCK) */}
-      <section id="sarana" className="bg-background text-primary py-24 lg:py-40">
-        <div className="container mx-auto px-6 lg:px-12">
-          <FadeUp>
-            <h2 className="text-4xl md:text-6xl font-black tracking-tighter leading-none mb-16 border-b-2 border-primary pb-8">
-              FASILITAS &<br />SARANA
-            </h2>
-          </FadeUp>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            {[
-              { name: "LAB KOMPUTER & MULTIMEDIA", desc: "Dilengkapi dengan 40 unit PC berstandar industri dan perangkat editing." },
-              { name: "PERPUSTAKAAN DIGITAL", desc: "Ribuan koleksi buku fisik dan e-book yang terintegrasi sistem barcode." },
-              { name: "LAPANGAN OLAHRAGA UTAMA", desc: "Fasilitas multifungsi untuk basket, futsal, voli, dan upacara bendera." },
-              { name: "MASJID RAYA SEKOLAH", desc: "Pusat kegiatan rohani berkapasitas 800 jamaah dengan fasilitas AC." }
-            ].map((facility, i) => (
-              <FadeUp key={i} delay={i * 0.1} className="group border-b border-primary/20 pb-8">
-                <div className="aspect-video bg-slate-200 mb-6 overflow-hidden relative">
-                   <div className="absolute inset-0 bg-slate-300 transition-transform duration-700 group-hover:scale-105" />
-                </div>
-                <h3 className="text-2xl font-black tracking-tighter mb-3 group-hover:underline underline-offset-4">{facility.name}</h3>
-                <p className="text-[13px] font-medium normal-case tracking-normal opacity-80">{facility.desc}</p>
-              </FadeUp>
-            ))}
+            <motion.div
+              initial={reduce ? false : { opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <h3 className="text-[10px] font-bold tracking-[0.2em] uppercase mb-6 text-white/50">Misi Kami</h3>
+              <ul className="flex flex-col gap-6 text-lg lg:text-xl font-medium opacity-90">
+                {misiPoints.length > 0 ? misiPoints.map((m: string, i: number) => (
+                  <li key={i} className="flex gap-6"><span className="font-bold opacity-50 shrink-0">{String(i + 1).padStart(2, '0')}</span> {m}</li>
+                )) : (
+                  <>
+                    <li className="flex gap-6"><span className="font-bold opacity-50 shrink-0">01</span> Meningkatkan keimanan dan ketakwaan terhadap Tuhan Yang Maha Esa.</li>
+                    <li className="flex gap-6"><span className="font-bold opacity-50 shrink-0">02</span> Menyelenggarakan kegiatan yang dapat mengembangkan bakat dan minat siswa.</li>
+                    <li className="flex gap-6"><span className="font-bold opacity-50 shrink-0">03</span> Menjadi jembatan komunikasi yang baik antara siswa dan pihak sekolah.</li>
+                    <li className="flex gap-6"><span className="font-bold opacity-50 shrink-0">04</span> Menanamkan sikap disiplin, tanggung jawab, dan gotong royong antar siswa.</li>
+                    <li className="flex gap-6"><span className="font-bold opacity-50 shrink-0">05</span> Berperan aktif dalam menjaga ketertiban, kebersihan, dan keindahan lingkungan sekolah.</li>
+                  </>
+                )}
+              </ul>
+            </motion.div>
           </div>
         </div>
       </section>
 
+      {/* STRUKTUR ORGANISASI (Edge-to-Edge on Mobile via w-screen -mx-6) */}
+      <section id="struktur" className="bg-background text-primary py-24 lg:py-40 overflow-hidden">
+        <div className="container mx-auto px-6 lg:px-12">
+          
+          <motion.div
+             initial={reduce ? false : { opacity: 0, y: 24 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             viewport={{ once: true }}
+             transition={{ duration: 0.6 }}
+             className="mb-20 lg:mb-32"
+          >
+            <h2 className="text-5xl md:text-7xl font-bold tracking-tighter leading-none mb-6">
+              Struktur<br />Pengurus
+            </h2>
+          </motion.div>
+          
+          {/* PEMBINA LEVEL (Mobile swipe/snap layout) */}
+          <div className="mb-32 flex flex-col items-center text-center">
+            <h3 className="text-[10px] font-bold tracking-[0.2em] uppercase mb-8 text-primary/80 px-3 py-1.5 border border-primary/30 rounded-full inline-block">Pembina OSIS</h3>
+            {/* Mobile grid instead of swipe container */}
+            <div className="grid grid-cols-2 gap-4 md:gap-6 lg:gap-12 max-w-3xl w-full">
+              {pembinas.map((person, i) => (
+                <motion.div 
+                  key={`pembina-${person.id || i}`}
+                  className="flex flex-col"
+                  initial={reduce ? false : { opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: i * 0.1 }}
+                >
+                  <div className="aspect-4/5 bg-slate-200 relative mb-6 overflow-hidden rounded-3xl group">
+                    <div 
+                      className="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-500 ease-out" 
+                      style={{ backgroundImage: `url('${person.image}')` }}
+                    />
+                  </div>
+                  <h3 className="text-3xl font-bold tracking-tighter mb-2">{person.name}</h3>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* INTI LEVEL: KETUA & WAKIL */}
+          <div className="mb-32 flex flex-col items-center text-center">
+            <h3 className="text-[10px] font-bold tracking-[0.2em] uppercase mb-8 text-primary/80 px-3 py-1.5 border border-primary/30 rounded-full inline-block">Badan Pengurus Harian (Inti)</h3>
+            <div className="grid grid-cols-2 gap-4 md:gap-6 lg:gap-12 max-w-3xl w-full">
+              {intis.map((person, i) => (
+                <Link href="/bph/ketua-wakil" key={`inti-${person.id || i}`} className="flex flex-col group active:scale-[0.98] transition-transform">
+                  <motion.div 
+                    initial={reduce ? false : { opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: i * 0.1 }}
+                  >
+                    <div className="aspect-4/5 bg-slate-200 relative mb-6 overflow-hidden rounded-3xl group-hover:border-primary/20 border-2 border-transparent transition-all">
+                      <div 
+                        className="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-500 ease-out" 
+                        style={{ backgroundImage: `url('${person.image}')` }}
+                      />
+                    </div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-50 mb-3 group-hover:text-primary transition-colors">{person.role}</p>
+                    <h3 className="text-3xl font-bold tracking-tighter mb-2 group-hover:text-primary transition-colors">{person.name}</h3>
+                  </motion.div>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* SEKRETARIS & BENDAHARA LEVEL */}
+          <div className="flex flex-col items-center text-center">
+            <h3 className="text-[10px] font-bold tracking-[0.2em] uppercase mb-8 text-primary/80 px-3 py-1.5 border border-primary/30 rounded-full inline-block">Sekretaris & Bendahara</h3>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8 w-full text-left">
+              {sekbens.map((person, i) => (
+                <Link href="/bph/sekretaris-bendahara" key={`sekben-${person.id || i}`} className="flex flex-col group active:scale-[0.98] transition-transform">
+                  <motion.div 
+                    initial={reduce ? false : { opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: i * 0.1 }}
+                  >
+                    <div className="aspect-3/4 bg-slate-200 relative mb-6 overflow-hidden rounded-3xl group-hover:border-primary/20 border-2 border-transparent transition-all">
+                      <div 
+                        className="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-500 ease-out" 
+                        style={{ backgroundImage: `url('${person.image}')` }}
+                      />
+                    </div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-50 mb-3 group-hover:text-primary transition-colors">{person.role}</p>
+                    <h3 className="text-2xl font-bold tracking-tighter group-hover:text-primary transition-colors">{person.name}</h3>
+                  </motion.div>
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
-      </SlantedHeader>
+      </section>
+
+      {/* DAFTAR SEKBID (Minimalist Split) */}
+      <section id="sekbid" className="bg-primary text-white py-24 lg:py-40">
+        <div className="container mx-auto px-6 lg:px-12">
+          <motion.div
+             initial={reduce ? false : { opacity: 0, y: 24 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             viewport={{ once: true }}
+             transition={{ duration: 0.6 }}
+             className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
+          >
+            <div>
+              <h2 className="text-5xl md:text-7xl font-bold tracking-tighter leading-none mb-8">
+                SEKSI<br />BIDANG
+              </h2>
+              <p className="text-xl opacity-90 max-w-lg leading-relaxed mb-12">
+                Terdiri dari 10 Seksi Bidang (Sekbid) yang membawahi berbagai ekstrakurikuler dan program kerja pengembangan siswa di berbagai aspek.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link 
+                  href="/sekbid" 
+                  className="bg-white text-primary text-sm font-bold px-8 py-4 rounded-full active:scale-95 transition-transform duration-150 ease-out inline-flex items-center justify-center gap-3"
+                >
+                  Lihat Program <ArrowRightIcon className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+            
+            {/* Abstract representation of sekbid */}
+            <div className="hidden lg:grid grid-cols-3 gap-4 opacity-30">
+               {[...Array(9)].map((_, i) => (
+                 <div key={i} className={`bg-white rounded-2xl ${i === 4 ? 'aspect-square' : 'aspect-video'} w-full`} />
+               ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+
+
     </div>
   );
 }

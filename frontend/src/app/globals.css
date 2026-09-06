@@ -1,13 +1,16 @@
 @import "tailwindcss";
 
+/* Pastikan Tailwind HANYA men-scan folder src agar tidak terjadi OOM (Out Of Memory) akibat file gambar raksasa di folder public */
+@source "../../src";
+
 :root {
   --background: #f5f4ef;
   --foreground: #1a1a1a;
-  --primary: #004bbf;
+  --primary: #800000;
   --primary-foreground: #ffffff;
-  --mnbaq-teal: #006f8a;
-  --mnbaq-green: #007641;
-  --mnbaq-yellow: #ffea00;
+  --mnbaq-teal: #800000;
+  --mnbaq-green: #5c0000;
+  --mnbaq-yellow: #a30000;
 }
 
 @theme inline {

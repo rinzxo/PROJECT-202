@@ -1,54 +1,151 @@
-import React from 'react';
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { MapPin, Clock, ArrowRight } from "lucide-react";
-import { SlantedHeader } from "@/components/layout/slanted-header";
+"use client";
+
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import { motion, useReducedMotion } from "framer-motion";
+import { supabase } from '@/lib/supabase';
+
+// Taste Skill Dials
+// DESIGN_VARIANCE: 6 (Editorial split-screen layout)
+// MOTION_INTENSITY: 5 (Smooth scroll reveals)
+// VISUAL_DENSITY: 3 (Airy, typographic rows instead of heavy cards)
 
 export default function EventsPage() {
-  const events = [
-    { id: 1, date: "24", month: "OKT", title: "Gelar Karya P5: Gaya Hidup Berkelanjutan", loc: "Lapangan Utama", time: "07:30 - Selesai", desc: "Pameran hasil karya siswa kelas X dan XI dalam mengimplementasikan profil pelajar Pancasila." },
-    { id: 2, date: "28", month: "OKT", title: "Upacara Peringatan Hari Sumpah Pemuda", loc: "Lapangan Upacara", time: "07:00 - 08:30", desc: "Upacara bendera peringatan hari Sumpah Pemuda dengan mengenakan pakaian adat Nusantara." },
-    { id: 3, date: "05", month: "NOV", title: "Workshop Jurnalistik & Mading Digital", loc: "Ruang Aula Serbaguna", time: "09:00 - 14:00", desc: "Pelatihan dasar jurnalistik untuk anggota ekskul dan perwakilan kelas." },
-    { id: 4, date: "12", month: "DEC", title: "Classmeeting Semester Genap", loc: "Lapangan Olahraga", time: "08:00 - 15:00", desc: "Kompetisi olahraga antarkelas (Futsal, Basket, Voli, E-Sports)." }
-  ];
+  const reduce = useReducedMotion();
+  const [events, setEvents] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const { data } = await supabase
+        .from('events')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (data) setEvents(data);
+    };
+    fetchEvents();
+  }, []);
 
   return (
-    <div className="flex flex-col min-h-screen font-sans">
-      <SlantedHeader 
-        title="EVENT HUB"
-        subtitle="AGENDA SEKOLAH"
-        description="Pusat informasi kegiatan, perlombaan internal, dan acara sekolah. Jangan sampai terlewat!"
-      >
-        <div className="container mx-auto px-6 lg:px-12 max-w-5xl pt-16 lg:pt-32 pb-32">
-
-
-      <div className="flex flex-col gap-6">
-        {events.map((event) => (
-          <Card key={event.id} className="overflow-hidden hover:shadow-lg transition-shadow group border-slate-200">
-            <div className="flex flex-col md:flex-row">
-              <div className="md:w-48 bg-slate-50 border-r border-slate-100 flex flex-col items-center justify-center p-8 group-hover:bg-primary transition-colors">
-                <span className="text-sm font-bold uppercase tracking-widest text-slate-400 group-hover:text-blue-200">{event.month}</span>
-                <span className="text-5xl font-black text-slate-900 group-hover:text-white mt-1">{event.date}</span>
+    <div className="flex flex-col min-h-dvh font-sans selection:bg-primary selection:text-white bg-background pt-24 lg:pt-32">
+      <div className="container mx-auto px-6 lg:px-12 flex-1">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start pb-32">
+          
+          {/* LEFT COLUMN: Sticky Header & Filters */}
+          <div className="lg:col-span-4 lg:sticky lg:top-32 h-fit">
+            <motion.div
+              initial={reduce ? false : { opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[0.9] text-primary mb-6">
+                Event<br />Hub
+              </h1>
+              <p className="text-lg md:text-xl font-medium tracking-wide opacity-80 max-w-sm mb-12 leading-relaxed">
+                Pusat informasi kegiatan, perlombaan internal, dan acara sekolah.
+              </p>
+              
+              {/* Optional: Minimalist Filters / Years */}
+              <div className="hidden lg:flex flex-col gap-4">
+                <span className="text-xs font-bold tracking-widest uppercase text-primary/50">Tahun Akademik</span>
+                <ul className="flex flex-col gap-2">
+                  <li>
+                    <button className="text-xl font-bold text-primary hover:translate-x-2 transition-transform">
+                      2026
+                    </button>
+                  </li>
+                  <li>
+                    <button className="text-xl font-medium text-foreground/40 hover:text-primary hover:translate-x-2 transition-all">
+                      2025
+                    </button>
+                  </li>
+                </ul>
               </div>
-              <CardContent className="p-6 md:p-8 flex-1 flex flex-col justify-center space-y-4">
-                <h3 className="text-2xl font-bold text-slate-900 group-hover:text-primary transition-colors">{event.title}</h3>
-                <p className="text-slate-600">{event.desc}</p>
-                <div className="flex flex-wrap gap-4 text-sm font-medium text-slate-500 pt-2">
-                  <div className="flex items-center gap-1.5"><MapPin className="w-4 h-4"/> {event.loc}</div>
-                  <div className="flex items-center gap-1.5"><Clock className="w-4 h-4"/> {event.time}</div>
-                </div>
-              </CardContent>
-              <div className="p-6 md:p-8 border-t md:border-t-0 md:border-l border-slate-100 flex items-center justify-center bg-slate-50/50">
-                <Button className="w-full md:w-auto font-semibold">
-                  Lihat Detail
-                </Button>
-              </div>
-            </div>
-          </Card>
-        ))}
-      </div>
+            </motion.div>
+          </div>
+
+          {/* RIGHT COLUMN: Scrolling Event List */}
+          <div className="lg:col-span-8 flex flex-col pt-8 lg:pt-0">
+            {events.map((event, index) => {
+              const dateParts = event.date ? event.date.split(' ') : ['-','-','-'];
+              const d = dateParts[0] || '-';
+              const m = dateParts[1] || '';
+              const y = dateParts[2] || '';
+
+              return (
+              <Link href={event.registration_link || `#`} key={event.id} target={event.registration_link ? "_blank" : "_self"} className="group block">
+                <motion.div 
+                  className="flex flex-col md:flex-row gap-8 md:gap-12 py-10 md:py-16 border-t border-primary/20 transition-colors group-hover:bg-primary/3 -mx-6 px-6 lg:mx-0 lg:px-6 rounded-3xl relative overflow-hidden"
+                  initial={reduce ? false : { opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                >
+                  
+                  {/* Event Date (Large Display Typography) */}
+                  <div className="md:w-32 flex flex-col shrink-0 relative z-10">
+                    <span className="text-xs font-bold uppercase tracking-widest text-primary/50 mb-2">
+                      {m} {y}
+                    </span>
+                    <span className="text-6xl md:text-7xl font-bold tracking-tighter text-primary leading-none group-hover:scale-105 transition-transform origin-left">
+                      {d}
+                    </span>
+                  </div>
+
+                  {/* Event Details */}
+                  <div className="flex-1 flex flex-col justify-center relative z-10">
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-sm bg-primary/10 text-primary">{event.category}</span>
+                      <span className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-sm ${event.status === 'completed' ? 'bg-slate-100 text-slate-500' : event.status === 'ongoing' ? 'bg-emerald-100 text-emerald-600' : 'bg-blue-100 text-blue-600'}`}>
+                        {event.status}
+                      </span>
+                    </div>
+                    <h3 className="text-3xl md:text-4xl font-bold tracking-tighter text-foreground mb-4 group-hover:text-primary transition-colors">
+                      {event.title}
+                    </h3>
+                    <p className="text-base text-foreground/70 mb-8 max-w-2xl leading-relaxed">
+                      {event.description}
+                    </p>
+                    
+                    <div className="flex flex-wrap gap-x-8 gap-y-4 text-sm font-bold tracking-widest uppercase text-primary/70">
+                      <span>{event.time}</span>
+                      <span>{event.location}</span>
+                    </div>
+                  </div>
+                  
+                  {/* Hover Arrow Indicator */}
+                  <div className="hidden md:flex flex-col items-center justify-center pl-8 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 relative z-10">
+                    <div className="w-16 h-16 rounded-full border border-primary/20 flex items-center justify-center group-hover:border-primary group-hover:bg-primary group-hover:text-white transition-colors">
+                      <ArrowRightIcon className="w-6 h-6" strokeWidth={1.5} />
+                    </div>
+                    {event.registration_link && (
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-primary mt-4 text-center">Daftar<br/>Sekarang</span>
+                    )}
+                  </div>
+
+                  {/* Background Cover Image on Hover */}
+                  <div 
+                    className="absolute inset-0 bg-cover bg-center opacity-0 group-hover:opacity-10 transition-opacity duration-700 mix-blend-multiply pointer-events-none"
+                    style={{ backgroundImage: `url('${event.image}')` }}
+                  />
+
+                </motion.div>
+              </Link>
+            )})}
+            
+            {/* End of list marker */}
+            <motion.div 
+              className="py-12 border-t border-primary/20 flex justify-center opacity-50"
+              initial={reduce ? false : { opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+            >
+              <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+            </motion.div>
+          </div>
+          
         </div>
-      </SlantedHeader>
+      </div>
     </div>
   );
 }

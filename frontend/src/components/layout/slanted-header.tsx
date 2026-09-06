@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
 
 interface SlantedHeaderProps {
   title: React.ReactNode;
@@ -89,7 +89,7 @@ export function SlantedHeader({ title, titleClassName, subtitle, description, im
                 </p>
               </div>
               <div className="hidden md:block pb-2">
-                 <ArrowRight className="w-16 h-16" strokeWidth={1} />
+                 <ArrowRightIcon className="w-5 h-5 ml-1 inline-block opacity-80" />
               </div>
             </div>
           </motion.div>

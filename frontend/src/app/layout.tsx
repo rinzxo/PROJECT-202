@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Fustat } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
+import ClientLayout from "./ClientLayout";
 
 const fustat = Fustat({
   variable: "--font-fustat",
@@ -11,8 +10,8 @@ const fustat = Fustat({
 });
 
 export const metadata: Metadata = {
-  title: "SMAN 2 Babelan - Creative & Operations Digital Hub",
-  description: "Portal resmi SMAN 2 Babelan terintegrasi dengan Event Hub dan Creative Media Showcase",
+  title: "OSIS SMAN 2 Babelan",
+  description: "Website resmi Organisasi Siswa Intra Sekolah (OSIS) SMAN 2 Babelan.",
 };
 
 export default function RootLayout({
@@ -26,9 +25,7 @@ export default function RootLayout({
       className={`${fustat.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );

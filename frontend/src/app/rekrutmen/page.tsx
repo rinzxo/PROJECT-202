@@ -30,7 +30,7 @@ export default function RekrutmenPage() {
   const [showNotFound, setShowNotFound] = useState(false);
   
   // Video loader state
-  const [pendingResult, setPendingResult] = useState<Participant | null>(null);
+  const pendingResultRef = useRef<Participant | null>(null);
   const [showRecruitmentLoader, setShowRecruitmentLoader] = useState(false);
   const [isLoaderFading, setIsLoaderFading] = useState(false);
   const videoEnded = useRef(false);
@@ -69,9 +69,9 @@ export default function RekrutmenPage() {
     setTimeout(() => {
       setShowRecruitmentLoader(false);
       setIsLoaderFading(false);
-      if (pendingResult) {
-        setSelectedResult(pendingResult);
-        setPendingResult(null);
+      if (pendingResultRef.current) {
+        setSelectedResult(pendingResultRef.current);
+        pendingResultRef.current = null;
       }
     }, 1000);
   };
@@ -387,7 +387,7 @@ export default function RekrutmenPage() {
               </button>
               <button 
                 onClick={() => {
-                  setPendingResult(confirmResult);
+                  pendingResultRef.current = confirmResult;
                   setConfirmResult(null);
                   setShowRecruitmentLoader(true);
                   videoEnded.current = false;

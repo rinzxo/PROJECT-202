@@ -9,6 +9,7 @@ import Link from 'next/link';
 
 export default function AdminDashboardPage() {
   const cards = [
+    { title: 'Rekrutmen', href: '/admin/rekrutmen', icon: UserGroupIcon, color: 'bg-blue-600', count: 'Kelola Kelulusan' },
     { title: 'Galeri', href: '/admin/galeri', icon: PhotoIcon, color: 'bg-blue-500', count: 'Kelola Foto' },
     { title: 'Event Hub', href: '/admin/events', icon: CalendarIcon, color: 'bg-rose-500', count: 'Kelola Acara' },
     { title: 'BPH', href: '/admin/bph', icon: UserGroupIcon, color: 'bg-emerald-500', count: 'Kelola Pengurus' },

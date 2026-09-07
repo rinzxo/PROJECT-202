@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
-import { TrashIcon, ArrowPathIcon, ClipboardDocumentCheckIcon, PlusIcon, CheckCircleIcon, XCircleIcon, DocumentArrowUpIcon } from '@heroicons/react/24/outline';
+import { TrashIcon, ArrowPathIcon, ClipboardDocumentCheckIcon, PlusIcon, CheckCircleIcon, XCircleIcon, DocumentArrowUpIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import Modal from '@/components/ui/Modal';
 import * as XLSX from 'xlsx';
 
@@ -291,6 +291,38 @@ export default function AdminRekrutmenPage() {
           </button>
         </div>
       </div>
+
+      {!isLoading && (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <p className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-1">Total Pendaftar</p>
+              <h3 className="text-3xl font-black text-slate-900">{participants.length}</h3>
+            </div>
+            <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center text-slate-400">
+              <UserGroupIcon className="w-6 h-6" />
+            </div>
+          </div>
+          <div className="bg-blue-500 p-5 rounded-2xl shadow-sm flex items-center justify-between text-white">
+            <div>
+              <p className="text-sm font-bold text-blue-100 uppercase tracking-wider mb-1">Dinyatakan Lulus</p>
+              <h3 className="text-3xl font-black">{participants.filter(p => p.status === 'Lulus').length}</h3>
+            </div>
+            <div className="w-12 h-12 bg-blue-400/30 rounded-full flex items-center justify-center text-blue-100">
+              <CheckCircleIcon className="w-6 h-6" />
+            </div>
+          </div>
+          <div className="bg-red-500 p-5 rounded-2xl shadow-sm flex items-center justify-between text-white">
+            <div>
+              <p className="text-sm font-bold text-red-100 uppercase tracking-wider mb-1">Tidak Lulus</p>
+              <h3 className="text-3xl font-black">{participants.filter(p => p.status !== 'Lulus').length}</h3>
+            </div>
+            <div className="w-12 h-12 bg-red-400/30 rounded-full flex items-center justify-center text-red-100">
+              <XCircleIcon className="w-6 h-6" />
+            </div>
+          </div>
+        </div>
+      )}
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Tambah Peserta Rekrutmen" maxWidth="max-w-4xl">
         <div className="mb-6">

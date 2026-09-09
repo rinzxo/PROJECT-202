@@ -46,18 +46,39 @@ export default function EVotingPage() {
 
   const fetchVoters = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('voters')
-      .select('*')
-      .order('kelas', { ascending: true })
-      .order('nama', { ascending: true });
-      
-    if (error) {
-      console.error('Error fetching voters:', error);
-      alert('Gagal mengambil data dari database. Pastikan tabel "voters" sudah dibuat di Supabase.');
-    } else {
-      setVoters(data || []);
+    let allVoters: Voter[] = [];
+    let hasMore = true;
+    let page = 0;
+    const pageSize = 1000;
+
+    while (hasMore) {
+      const { data, error } = await supabase
+        .from('voters')
+        .select('*')
+        .order('kelas', { ascending: true })
+        .order('nama', { ascending: true })
+        .range(page * pageSize, (page + 1) * pageSize - 1);
+        
+      if (error) {
+        console.error('Error fetching voters:', error);
+        alert('Gagal mengambil data dari database. Pastikan tabel "voters" sudah dibuat di Supabase.');
+        hasMore = false;
+        break;
+      }
+
+      if (data) {
+        allVoters = [...allVoters, ...data];
+        if (data.length < pageSize) {
+          hasMore = false;
+        } else {
+          page++;
+        }
+      } else {
+        hasMore = false;
+      }
     }
+    
+    setVoters(allVoters);
     setLoading(false);
   };
 

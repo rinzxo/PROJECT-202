@@ -27,7 +27,7 @@ const YoutubeIcon = ({ className }: { className?: string }) => (
 
 export function Footer() {
   return (
-    <footer className="relative z-20 w-full bg-background pt-20 lg:pt-32 pb-12 border-t-2 border-primary/10">
+    <footer className="relative z-20 w-full bg-background pt-20 lg:pt-32 pb-12 border-t-2 border-primary/10 print:hidden">
       <div className="container mx-auto px-6 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-8">
 

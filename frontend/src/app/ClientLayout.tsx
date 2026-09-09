@@ -7,7 +7,7 @@ import { Footer } from "@/components/layout/footer";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isAdmin = pathname?.startsWith('/admin');
+  const isStandalone = pathname?.startsWith('/admin') || pathname?.startsWith('/e-voting') || pathname?.startsWith('/kandidat');
   
   const [showGlobalLoader, setShowGlobalLoader] = useState(false);
   const [isFading, setIsFading] = useState(false);
@@ -22,7 +22,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   useEffect(() => {
     // Hanya tampilkan loading screen video sekali per sesi di halaman publik
-    if (!isAdmin && !sessionStorage.getItem('hasSeenIntro')) {
+    if (!isStandalone && !sessionStorage.getItem('hasSeenIntro')) {
       setShowGlobalLoader(true);
       sessionStorage.setItem('hasSeenIntro', 'true');
       
@@ -30,7 +30,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       const timer = setTimeout(() => handleVideoEnd(), 5500);
       return () => clearTimeout(timer);
     }
-  }, [isAdmin]);
+  }, [isStandalone]);
 
   return (
     <>
@@ -54,9 +54,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           />
         </div>
       )}
-      {!isAdmin && <Navbar />}
+      {!isStandalone && <Navbar />}
       <main className="flex-1">{children}</main>
-      {!isAdmin && <Footer />}
+      {!isStandalone && <Footer />}
     </>
   );
 }

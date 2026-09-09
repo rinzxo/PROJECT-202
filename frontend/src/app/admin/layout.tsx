@@ -43,6 +43,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: 'Karya & Prestasi', href: '/admin/karya', icon: TrophyIcon },
     { name: 'Berita Utama', href: '/admin/berita', icon: NewspaperIcon },
     { name: 'Rekrutmen', href: '/admin/rekrutmen', icon: IdentificationIcon },
+    { name: 'E-Voting', href: '/admin/e-voting', icon: UserGroupIcon },
     { name: 'Pengaturan', href: '/admin/pengaturan', icon: Cog6ToothIcon },
   ];
 
@@ -57,14 +58,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* MOBILE OVERLAY */}
       {isSidebarOpen && (
         <div 
-          className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 lg:hidden"
+          className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 lg:hidden print:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
 
       {/* SIDEBAR */}
       <aside className={cn(
-        "fixed inset-y-0 left-0 z-50 w-72 bg-slate-950 text-slate-300 transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:block flex flex-col",
+        "fixed inset-y-0 left-0 z-50 w-72 bg-slate-950 text-slate-300 transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:block flex flex-col print:hidden",
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="h-20 flex items-center justify-between px-6 border-b border-slate-800 shrink-0">
@@ -111,8 +112,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </aside>
 
       {/* MAIN CONTENT AREA */}
-      <div className="flex-1 flex flex-col min-w-0">
-        <header className="h-20 bg-white border-b border-slate-200 flex items-center px-6 lg:px-10 shrink-0 sticky top-0 z-30">
+      <div className="flex-1 flex flex-col min-w-0 print:block">
+        <header className="h-20 bg-white border-b border-slate-200 flex items-center px-6 lg:px-10 shrink-0 sticky top-0 z-30 print:hidden">
           <button 
             className="lg:hidden p-2 -ml-2 mr-4 hover:bg-slate-100 rounded-md"
             onClick={() => setIsSidebarOpen(true)}
@@ -127,7 +128,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
         </header>
 
-        <main className="flex-1 p-6 lg:p-10 overflow-x-hidden">
+        <main className="flex-1 p-6 lg:p-10 overflow-x-hidden print:p-0 print:overflow-visible">
           {children}
         </main>
       </div>

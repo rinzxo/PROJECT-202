@@ -20,6 +20,8 @@ export default function Home() {
   const [galleries, setGalleries] = useState<any[]>([]);
   const [karya, setKarya] = useState<any[]>([]);
   const [berita, setBerita] = useState<any[]>([]);
+  const [candidates, setCandidates] = useState<any[]>([]);
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,8 +39,36 @@ export default function Home() {
 
       const { data: gal } = await supabase.from('galleries').select('*').order('created_at', { ascending: false }).limit(6);
       if (gal) setGalleries(gal);
+
+      const { data: cand } = await supabase.from('candidates').select('*').order('nomor_urut', { ascending: true });
+      if (cand) setCandidates(cand);
     };
     fetchData();
+
+    // Countdown logic
+    const targetDate = new Date('2026-09-11T08:00:00').getTime();
+    
+    const updateCountdown = () => {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance < 0) {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+
+      setTimeLeft({
+        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((distance % (1000 * 60)) / 1000)
+      });
+    };
+
+    updateCountdown();
+    const intervalId = setInterval(updateCountdown, 1000);
+    
+    return () => clearInterval(intervalId);
   }, []);
 
   // We are building a bespoke sticky hero inside this file, 
@@ -140,6 +170,116 @@ export default function Home() {
                 </motion.div>
               </div>
             </div>
+          </section>
+
+          {/* 3.5 PEMILU RAYA SECTION (HIGH-END VISUAL DESIGN) */}
+          <section className="container mx-auto px-6 lg:px-12 mb-32 relative z-10">
+            <motion.div
+              className="bg-[#050505] rounded-[2.5rem] p-8 md:p-12 lg:p-20 overflow-hidden relative shadow-2xl"
+              initial={reduce ? false : { opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.1 }}
+              transition={{ duration: 1, ease: [0.32, 0.72, 0, 1] }}
+            >
+              {/* Ethereal Glow Background */}
+              <div className="absolute inset-0 z-0 pointer-events-none">
+                <div className="absolute top-0 right-0 w-150 h-150 bg-[#E53935]/15 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3" />
+                <div className="absolute bottom-0 left-0 w-125 h-125 bg-purple-900/15 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/4" />
+              </div>
+
+              {/* Header / Countdown */}
+              <div className="relative z-10 flex flex-col xl:flex-row justify-between items-start xl:items-end gap-12 mb-20">
+                <div className="max-w-2xl text-white">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6 backdrop-blur-md">
+                    <div className="w-2 h-2 rounded-full bg-[#E53935] animate-pulse" />
+                    <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/80">Agenda Mendesak</span>
+                  </div>
+                  <h2 className="text-5xl md:text-7xl font-bold tracking-tighter leading-[0.95] mb-6">
+                    Masa Depan <span className="text-transparent bg-clip-text bg-linear-to-r from-white to-white/40 block mt-2">Ada di Tanganmu.</span>
+                  </h2>
+                  <p className="text-lg text-white/60 font-medium leading-relaxed">
+                    Pemilu Raya OSIS SMAN 2 Babelan segera tiba. Kenali sosok pemimpin masa depan Anda dan bersiaplah untuk memberikan suara.
+                  </p>
+                </div>
+
+                {/* The Countdown Block */}
+                <div className="flex gap-3 sm:gap-6 shrink-0 mt-8 xl:mt-0">
+                  {[
+                    { label: 'HARI', value: timeLeft.days },
+                    { label: 'JAM', value: timeLeft.hours },
+                    { label: 'MENIT', value: timeLeft.minutes },
+                    { label: 'DETIK', value: timeLeft.seconds }
+                  ].map((unit, idx) => (
+                    <div key={idx} className="flex flex-col items-center">
+                      <div className="w-16 h-20 sm:w-20 sm:h-24 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center backdrop-blur-md mb-3 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
+                        <span className="text-3xl sm:text-5xl font-black text-white font-mono">{unit.value.toString().padStart(2, '0')}</span>
+                      </div>
+                      <span className="text-[10px] font-bold text-white/40 tracking-[0.2em]">{unit.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Profiles Asymmetrical Bento */}
+              <div className="relative z-10 mb-24">
+                {candidates.length > 0 ? (
+                  <div className={`grid gap-6 ${candidates.length === 1 ? 'grid-cols-1 max-w-sm mx-auto' : candidates.length === 2 ? 'grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'}`}>
+                    {candidates.map((cand, i) => (
+                      <motion.div 
+                        key={cand.id}
+                        className="bg-white/5 border border-white/10 p-2 rounded-4xl group cursor-default relative overflow-hidden"
+                        whileHover={{ scale: 0.98 }}
+                        transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
+                      >
+                        {/* Outer Shell -> Inner Core (Double Bezel) */}
+                        <div className="bg-[#111] rounded-3xl h-full overflow-hidden relative shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] flex flex-col">
+                          <div className="absolute top-4 left-4 z-10 bg-white/10 backdrop-blur-md text-white border border-white/10 w-10 h-10 rounded-full flex items-center justify-center font-black shadow-lg">
+                            {cand.nomor_urut}
+                          </div>
+                          <div className="aspect-square w-full relative bg-[#1a1a1a]">
+                            <img src={cand.foto_url} alt={cand.nama} className="w-full h-full object-cover object-top opacity-70 group-hover:opacity-100 transition-all duration-700 grayscale group-hover:grayscale-0 scale-100 group-hover:scale-105" />
+                            <div className="absolute inset-0 bg-linear-to-t from-[#111] via-transparent to-transparent opacity-90" />
+                          </div>
+                          <div className="p-6 text-center z-10 -mt-16">
+                            <h3 className="text-2xl font-bold text-white tracking-tight mb-1">{cand.nama}</h3>
+                            <p className="text-[10px] text-white/50 uppercase tracking-[0.2em] font-medium mt-2">Calon Ketua & Wakil Ketua OSIS</p>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12 text-white/50 border border-white/10 rounded-3xl bg-white/5 backdrop-blur-sm">
+                    Kandidat sedang disiapkan.
+                  </div>
+                )}
+              </div>
+
+              {/* Looping Animated CTA Button (Button in Button) */}
+              <div className="relative z-10 flex justify-center">
+                <Link href="/e-voting" className="group relative inline-block">
+                  {/* Outer Pulsing Glow */}
+                  <motion.div 
+                    className="absolute -inset-3 rounded-full bg-[#E53935]/30 blur-2xl opacity-60"
+                    animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0.7, 0.4] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                  {/* Actual Button */}
+                  <div className="relative bg-[#E53935] hover:bg-[#d32f2f] text-white pl-10 pr-3 py-3 rounded-full flex items-center gap-8 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)] transition-all active:scale-95 duration-300">
+                    <span className="font-bold uppercase tracking-[0.15em] text-sm">Masuk Bilik Suara</span>
+                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center group-hover:bg-white/30 transition-colors relative overflow-hidden">
+                      <motion.div 
+                        className="flex items-center justify-center"
+                        animate={{ x: [0, 4, 0] }}
+                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                      >
+                        <ArrowRightIcon className="w-5 h-5 text-white" />
+                      </motion.div>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            </motion.div>
           </section>
 
           {/* 4. KARYA & PRESTASI (Bento Grid) */}

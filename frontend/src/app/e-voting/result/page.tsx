@@ -117,22 +117,22 @@ export default function RealResultPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 + (index * 0.1) }}
-                className="bg-white rounded-3xl overflow-hidden shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col group w-[260px] sm:w-[320px] md:w-auto md:min-w-0 shrink-0 snap-center md:h-full"
+                className="bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col group w-[180px] sm:w-[320px] md:w-auto md:min-w-0 shrink-0 snap-center md:h-full"
               >
                 {/* Photo & Number */}
-                <div className="relative w-full md:flex-1 md:min-h-0 bg-slate-100/50 overflow-hidden p-2 flex items-center justify-center">
+                <div className="relative w-full md:flex-1 md:min-h-0 bg-slate-100/50 overflow-hidden p-1 sm:p-2 flex items-center justify-center">
                   <img src={candidate.foto_url} alt={candidate.nama} className="w-full h-auto md:h-full object-contain transition-transform duration-700 group-hover:scale-105" />
-                  <div className="absolute top-4 left-4 bg-black/80 text-white w-10 h-10 flex items-center justify-center font-black text-xl rounded-xl backdrop-blur-sm shadow-lg z-10">
+                  <div className="absolute top-2 left-2 sm:top-4 sm:left-4 bg-black/80 text-white w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center font-black text-lg sm:text-xl rounded-lg sm:rounded-xl backdrop-blur-sm shadow-lg z-10">
                     {candidate.nomor_urut}
                   </div>
                 </div>
 
                 {/* Details */}
-                <div className="p-5 sm:p-6 flex-none bg-white border-t border-slate-100">
-                  <div className="mb-4">
-                    <div className="flex justify-between items-end">
-                      <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{candidateVotes} Suara</div>
-                      <div className="font-black text-3xl sm:text-4xl tracking-tighter text-slate-900 leading-none">{percentage.toFixed(1)}%</div>
+                <div className="p-4 sm:p-6 flex-none bg-white border-t border-slate-100">
+                  <div className="mb-3 sm:mb-4">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-1 sm:gap-0">
+                      <div className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider">{candidateVotes} Suara</div>
+                      <div className="font-black text-2xl sm:text-4xl tracking-tighter text-slate-900 leading-none">{percentage.toFixed(1)}%</div>
                     </div>
                   </div>
 

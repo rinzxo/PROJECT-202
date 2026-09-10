@@ -134,14 +134,10 @@ export default function TempResultPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 + (index * 0.1) }}
-                className="bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col group shrink-0 snap-center md:w-auto md:min-w-0 md:h-full"
-                style={{ width: '180px' }}
+                className="bg-white rounded-3xl overflow-hidden shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col group w-[85vw] max-w-[340px] md:max-w-none md:w-auto md:min-w-0 shrink-0 snap-center md:h-full"
               >
                 {/* Photo & Number */}
-                <div 
-                  className="relative w-full md:h-auto md:flex-1 md:min-h-0 bg-slate-100/50 overflow-hidden flex items-center justify-center"
-                  style={{ height: '240px' }}
-                >
+                <div className="relative w-full aspect-[4/5] md:aspect-auto md:h-auto md:flex-1 md:min-h-0 bg-slate-100/50 overflow-hidden flex items-center justify-center">
                   <img src={candidate.foto_url} alt={candidate.nama} className="w-full h-full object-cover object-top sm:object-contain transition-transform duration-700 group-hover:scale-105" />
                   <div className="absolute top-2 left-2 sm:top-4 sm:left-4 bg-black/80 text-white w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center font-black text-lg sm:text-xl rounded-lg sm:rounded-xl backdrop-blur-sm shadow-lg z-10">
                     {candidate.nomor_urut}
@@ -149,11 +145,11 @@ export default function TempResultPage() {
                 </div>
 
                 {/* Details */}
-                <div className="p-4 sm:p-6 flex-none bg-white border-t border-slate-100">
-                  <div className="mb-3 sm:mb-4">
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-1 sm:gap-0">
-                      <div className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider">Hasil Sementara</div>
-                      <div className="font-black text-2xl sm:text-4xl tracking-tighter text-slate-900 leading-none">{percentage.toFixed(1)}%</div>
+                <div className="p-5 sm:p-6 flex-none bg-white border-t border-slate-100">
+                  <div className="mb-4">
+                    <div className="flex justify-between items-end">
+                      <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Hasil Sementara</div>
+                      <div className="font-black text-3xl sm:text-4xl tracking-tighter text-slate-900 leading-none">{percentage.toFixed(1)}%</div>
                     </div>
                   </div>
 

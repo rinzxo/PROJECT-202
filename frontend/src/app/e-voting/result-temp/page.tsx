@@ -137,8 +137,8 @@ export default function TempResultPage() {
                 className="bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col group w-[180px] sm:w-[320px] md:w-auto md:min-w-0 shrink-0 snap-center md:h-full"
               >
                 {/* Photo & Number */}
-                <div className="relative w-full md:flex-1 md:min-h-0 bg-slate-100/50 overflow-hidden p-1 sm:p-2 flex items-center justify-center">
-                  <img src={candidate.foto_url} alt={candidate.nama} className="w-full h-auto md:h-full object-contain transition-transform duration-700 group-hover:scale-105" />
+                <div className="relative w-full aspect-[4/5] md:aspect-auto md:flex-1 md:min-h-0 bg-slate-100/50 overflow-hidden flex items-center justify-center">
+                  <img src={candidate.foto_url} alt={candidate.nama} className="w-full h-full object-cover sm:object-contain transition-transform duration-700 group-hover:scale-105" />
                   <div className="absolute top-2 left-2 sm:top-4 sm:left-4 bg-black/80 text-white w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center font-black text-lg sm:text-xl rounded-lg sm:rounded-xl backdrop-blur-sm shadow-lg z-10">
                     {candidate.nomor_urut}
                   </div>

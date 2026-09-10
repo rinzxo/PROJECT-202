@@ -112,9 +112,9 @@ export default function TempResultPage() {
         <img src="/images/SuaraKita.png" alt="Watermark" className="w-[800px] h-[800px] object-contain grayscale" />
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-8 pb-28 sm:pb-32 w-full max-w-6xl mx-auto relative z-10">
+      <div className="flex-1 flex flex-col items-center justify-center py-4 sm:p-8 pb-28 sm:pb-32 w-full max-w-6xl mx-auto relative z-10">
         {/* Candidate Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full">
+        <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full overflow-x-auto snap-x snap-mandatory px-4 sm:px-0 pb-4 scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {candidates.map((candidate, index) => {
             const candidateVotes = votes.filter(v => v.candidate_id === candidate.id).length;
             const percentage = totalVotes > 0 ? (candidateVotes / totalVotes) * 100 : 0;
@@ -134,7 +134,7 @@ export default function TempResultPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 + (index * 0.1) }}
-                className="bg-white rounded-3xl overflow-hidden shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col h-full group"
+                className="bg-white rounded-3xl overflow-hidden shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col group min-w-[85%] sm:min-w-[60%] md:min-w-0 shrink-0 snap-center md:h-full"
               >
                 {/* Photo & Number */}
                 <div className="relative w-full flex-1 bg-slate-100/50 overflow-hidden p-2 flex items-center justify-center">

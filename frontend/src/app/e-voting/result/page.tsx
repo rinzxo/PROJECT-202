@@ -97,7 +97,7 @@ export default function RealResultPage() {
     <div className="h-screen w-full bg-slate-50 font-sans flex flex-col overflow-hidden relative">
       <div className="flex-1 flex flex-col justify-center py-4 sm:p-8 pb-28 sm:pb-32 w-full max-w-6xl mx-auto min-h-0">
         {/* Candidate Cards Grid */}
-        <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full h-full md:h-auto overflow-x-auto snap-x snap-mandatory px-4 sm:px-0 pb-4 scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full overflow-x-auto snap-x snap-mandatory px-4 sm:px-0 pb-4 scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {candidates.map((candidate, index) => {
             const candidateVotes = votes.filter(v => v.candidate_id === candidate.id).length;
             const percentage = totalVotes > 0 ? (candidateVotes / totalVotes) * 100 : 0;
@@ -117,10 +117,10 @@ export default function RealResultPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 + (index * 0.1) }}
-                className="bg-white rounded-3xl overflow-hidden shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col group min-w-[85%] sm:min-w-[60%] md:min-w-0 shrink-0 snap-center h-full"
+                className="bg-white rounded-3xl overflow-hidden shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col group min-w-[85%] sm:min-w-[60%] md:min-w-0 shrink-0 snap-center md:h-full"
               >
                 {/* Photo & Number */}
-                <div className="relative w-full flex-1 min-h-0 bg-slate-100/50 overflow-hidden p-2 flex items-center justify-center">
+                <div className="relative w-full aspect-square md:aspect-auto md:flex-1 bg-slate-100/50 overflow-hidden p-2 flex items-center justify-center">
                   <img src={candidate.foto_url} alt={candidate.nama} className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105" />
                   <div className="absolute top-4 left-4 bg-black/80 text-white w-10 h-10 flex items-center justify-center font-black text-xl rounded-xl backdrop-blur-sm shadow-lg z-10">
                     {candidate.nomor_urut}

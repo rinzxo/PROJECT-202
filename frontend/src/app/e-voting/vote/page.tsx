@@ -7,7 +7,6 @@ import { CheckCircleIcon, KeyIcon, ArrowRightIcon, ArrowRightOnRectangleIcon } f
 import Modal from '@/components/ui/Modal';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { validateTokenAction, submitVoteAction } from '@/app/actions/voting';
 
 type Candidate = {
   id: string;
@@ -60,7 +59,11 @@ export default function VotePage() {
     setLoading(true);
     setErrorMsg('');
 
-    const { data, error } = await validateTokenAction(token.trim().toUpperCase());
+    const { data, error } = await supabase
+      .from('voters')
+      .select('*')
+      .eq('token', token.trim().toUpperCase())
+      .maybeSingle();
 
     if (error || !data) {
       setErrorMsg('Token tidak valid atau tidak ditemukan.');
@@ -111,9 +114,20 @@ export default function VotePage() {
     setIsSubmitting(true);
     
     try {
-      const result = await submitVoteAction(voter!.id, candidateToVote.id);
+      const { error: voteError } = await supabase
+        .from('votes')
+        .insert([{
+          voter_id: voter?.id,
+          candidate_id: candidateToVote.id,
+          waktu_voting: new Date().toISOString()
+        }]);
 
-      if (!result.success) throw new Error(result.error);
+      if (voteError) throw voteError;
+
+      await supabase
+        .from('voters')
+        .update({ status: 'Sudah Memilih' })
+        .eq('id', voter?.id);
 
       setIsSubmitting(false);
       setHasVotedSuccess(true);

@@ -10,7 +10,8 @@ import {
   MagnifyingGlassIcon,
   CheckCircleIcon,
   DocumentArrowDownIcon,
-  PrinterIcon
+  PrinterIcon,
+  ArrowUturnLeftIcon
 } from '@heroicons/react/24/outline';
 import * as XLSX from 'xlsx';
 import Modal from '@/components/ui/Modal';
@@ -136,6 +137,36 @@ export default function EVotingPage() {
       } else {
         setVoters([]);
         alert('Semua data berhasil dihapus.');
+      }
+    }
+  };
+
+  const handleResetVote = async (id: string, nama: string) => {
+    if(confirm(`Yakin ingin mereset status voting untuk ${nama}? Suara yang sudah masuk dari pemilih ini akan DIBATALKAN.`)) {
+      // 1. Hapus suara dari tabel votes
+      const { error: deleteVoteError } = await supabase
+        .from('votes')
+        .delete()
+        .eq('voter_id', id);
+
+      if (deleteVoteError) {
+        console.error('Error deleting vote:', deleteVoteError);
+        alert('Gagal membatalkan suara pemilih.');
+        return;
+      }
+
+      // 2. Update status voter menjadi 'Belum Memilih'
+      const { error: updateError } = await supabase
+        .from('voters')
+        .update({ status: 'Belum Memilih' })
+        .eq('id', id);
+
+      if (updateError) {
+        console.error('Error resetting voter status:', updateError);
+        alert('Gagal mereset status pemilih.');
+      } else {
+        setVoters(prev => prev.map(v => v.id === id ? { ...v, status: 'Belum Memilih' } : v));
+        alert(`Status pemilih ${nama} berhasil direset.`);
       }
     }
   };
@@ -498,7 +529,16 @@ export default function EVotingPage() {
                                 {voter.status}
                               </span>
                             </td>
-                            <td className="px-6 py-4 text-right">
+                            <td className="px-6 py-4 text-right whitespace-nowrap">
+                              {voter.status === 'Sudah Memilih' && (
+                                <button 
+                                  onClick={() => handleResetVote(voter.id, voter.nama)}
+                                  className="text-slate-400 hover:text-amber-600 p-2 rounded-lg hover:bg-amber-50 opacity-0 group-hover:opacity-100 transition-all mr-1"
+                                  title="Reset Status Memilih"
+                                >
+                                  <ArrowUturnLeftIcon className="w-5 h-5" />
+                                </button>
+                              )}
                               <button 
                                 onClick={() => handleDelete(voter.id)}
                                 className="text-slate-400 hover:text-red-600 p-2 rounded-lg hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-all"

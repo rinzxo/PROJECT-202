@@ -63,7 +63,7 @@ export default function VotePage() {
       .from('voters')
       .select('*')
       .eq('token', token.trim().toUpperCase())
-      .single();
+      .maybeSingle();
 
     if (error || !data) {
       setErrorMsg('Token tidak valid atau tidak ditemukan.');

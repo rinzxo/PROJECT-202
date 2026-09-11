@@ -75,7 +75,7 @@ export default function EVotingApp() {
         .from('evoting_settings')
         .select('hero_video_url')
         .eq('id', 1)
-        .single();
+        .maybeSingle();
       
       if (data && data.hero_video_url) {
         setHeroVideo(data.hero_video_url);

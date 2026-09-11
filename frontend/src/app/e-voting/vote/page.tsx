@@ -178,7 +178,7 @@ export default function VotePage() {
           initial={{ y: 20, opacity: 0 }} 
           animate={{ y: 0, opacity: 1 }} 
           transition={{ delay: 0.4 }}
-          onClick={() => window.location.href = '/e-voting'}
+          onClick={() => window.location.href = '/e-voting/vote'}
           className="px-10 py-4 bg-transparent border-2 border-white text-white rounded-xl font-bold uppercase tracking-widest hover:bg-white hover:text-[#E53935] transition-all"
         >
           Kembali ke Beranda

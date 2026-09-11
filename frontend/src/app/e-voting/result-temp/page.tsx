@@ -85,7 +85,6 @@ export default function TempResultPage() {
       // QUICK COUNT SIMULATION LOGIC
       // We only take the first 30% of the votes to simulate a quick count.
       // This ensures the data doesn't randomly jump on refresh, but grows slowly as more votes come in.
-      const allVotes = vData || [];
       const sampleSize = Math.max(1, Math.floor(allVotes.length * 0.3));
       
       // Only slice if there are actually votes, otherwise empty

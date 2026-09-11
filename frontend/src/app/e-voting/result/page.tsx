@@ -56,13 +56,31 @@ export default function RealResultPage() {
       if (cError) throw cError;
       setCandidates(cData || []);
 
-      // Fetch Votes
-      const { data: vData, error: vError } = await supabase
-        .from('votes')
-        .select('candidate_id');
+      // Fetch Votes (handle >1000 rows limit by paginating)
+      let allVotes: any[] = [];
+      let fetchMore = true;
+      let from = 0;
+      const limit = 1000;
+
+      while (fetchMore) {
+        const { data: vData, error: vError } = await supabase
+          .from('votes')
+          .select('candidate_id')
+          .range(from, from + limit - 1);
+          
+        if (vError) throw vError;
         
-      if (vError) throw vError;
-      setVotes(vData || []);
+        if (vData && vData.length > 0) {
+          allVotes = [...allVotes, ...vData];
+          from += limit;
+          if (vData.length < limit) {
+            fetchMore = false;
+          }
+        } else {
+          fetchMore = false;
+        }
+      }
+      setVotes(allVotes);
 
       // Fetch total expected voters to show participation rate (optional)
       const { count, error: countError } = await supabase

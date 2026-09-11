@@ -56,13 +56,31 @@ export default function TempResultPage() {
       if (cError) throw cError;
       setCandidates(cData || []);
 
-      // Fetch Votes - Order by id or time so the slice is consistent
-      const { data: vData, error: vError } = await supabase
-        .from('votes')
-        .select('candidate_id')
-        .order('waktu_voting', { ascending: true });
+      // Fetch Votes (handle >1000 rows limit by paginating)
+      let allVotes: any[] = [];
+      let fetchMore = true;
+      let from = 0;
+      const limit = 1000;
+
+      while (fetchMore) {
+        const { data: vData, error: vError } = await supabase
+          .from('votes')
+          .select('candidate_id')
+          .order('waktu_voting', { ascending: true })
+          .range(from, from + limit - 1);
+          
+        if (vError) throw vError;
         
-      if (vError) throw vError;
+        if (vData && vData.length > 0) {
+          allVotes = [...allVotes, ...vData];
+          from += limit;
+          if (vData.length < limit) {
+            fetchMore = false;
+          }
+        } else {
+          fetchMore = false;
+        }
+      }
       
       // QUICK COUNT SIMULATION LOGIC
       // We only take the first 30% of the votes to simulate a quick count.
